@@ -308,7 +308,7 @@ class QwiicPCA9685(object):
 			self._i2c = qwiic_i2c.getI2CDriver()
 			if self._i2c == None:
 				print("Unable to load I2C driver for this platform.")
-				return False
+				return
 		else:
 			self._i2c = i2c_driver
 
@@ -318,8 +318,6 @@ class QwiicPCA9685(object):
 		else:
 			self.debug = debug	# Debug Statements Enabled
 
-
-		return True
 
 	#----------------------------------------------
 	# Reads value of specific bit in byte
@@ -345,7 +343,7 @@ class QwiicPCA9685(object):
 				returns: 1
 		"""
 
-		if len(bin(byte)) > bit_number:
+		if len(bin(byte)) < bit_number:
 			# Debug Message: 
 			if self.debug == 1:
 				print("Bit number is outside the bounds of the byte length.")
@@ -373,15 +371,18 @@ class QwiicPCA9685(object):
 		:rtype: Integer
 
 			:example:
+				Original Byte:
 				byte =	0x12 (HEX), 12h, or 16
 				Binary:	0001 0010
 				index:	7654 3210
 						|		|
 					   MSB	   LSB
-			
+				
+				Change:
 				bit_number =	4
 				value =			0
-
+				
+				Output Byte:
 				returns:		2
 				Binary:	0000 0010
 		"""
@@ -395,10 +396,10 @@ class QwiicPCA9685(object):
 				print("Bit number is outside the bounds of the byte length.")
 
 			# A mask with length of bit_number with all bits of "value"
-			bit_mask = value * (2**bit_number -1)
+			bit_mask = (1 - value) * (2**bit_number -1)
 		else:
 			# A mask with length of byte of all "value"
-			bit_mask = value * (2**len(byte) -1)
+			bit_mask = (1 - value) * (2**len(bin(byte)) -1)
 
 		# Writes value in byte at bit_number
 		byte ^= (~bit_mask ^ byte) & mask
@@ -442,17 +443,17 @@ class QwiicPCA9685(object):
 		mode1 = self._i2c.readByte(self.address, MODE1)
 
 		if addr_bit == None:				# If no input for addr_bit, sets to ALLCALL
-			addr_bit = 0					# ALLCALL bit
+			get_addr_bit = 0					# ALLCALL bit
 		elif addr_bit < 0 or addr_bit > 3:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid addr_bit input. Selecting ALLCALL bit.")
-			set_addr_bit = 0				# ALLCALL bit
+			get_addr_bit = 0				# ALLCALL bit
 		else:								# Use input 'addr_bit'
-			set_addr_bit = addr_bit
+			get_addr_bit = addr_bit
 
 		# Reads specified address bit in MODE1.
-		addrMode = self.__readBit__(mode1, set_addr_bit)
+		addrMode = self.__readBit__(mode1, get_addr_bit)
 
 		return addrMode
 
@@ -973,7 +974,8 @@ class QwiicPCA9685(object):
 		channel_OFF_L = LED0_OFF_L + 4 * channel
 
 		# Enable word read/writes
-		self.set_auto_increment_bit(1)
+		if self.get_auto_increment_bit() != 1:
+			self.set_auto_increment_bit(1)
 
 		if on_off == None:
 			return False
@@ -1002,7 +1004,8 @@ class QwiicPCA9685(object):
 		channel_OFF_L = LED0_OFF_L + 4 * channel
 
 		# Enable word read/writes
-		self.set_auto_increment_bit(1)
+		if self.get_auto_increment_bit() != 1:
+			self.set_auto_increment_bit(1)
 
 		if value < 0 or 4095 < value:
 			# Debug Message: 
@@ -1130,7 +1133,7 @@ class QwiicPCA9685(object):
 			# Writes logic 1 to RESTART bit
 			self.write_restart_bit(1)
 		else:
-			print("RESTART bit logic 1; not in sleep mode.")
+			print("RESTART bit logic 0; not in sleep mode.")
 		
 		# Returns RESTART bit value
 		return self.get_restart_bit()
@@ -1235,17 +1238,23 @@ class QwiicPCA9685(object):
 		"""
 		self._i2c.writeCommand(_gcAddr, _SWRST)
 
+	def restart(self):
+		self._i2c.writeByte(self.address, MODE1, 0x00)
 
 	def get_pre_scale(self):
 		# Reads value in PRE_SCALE register.
-		prescale = self._i2c.ReadByte(self.address, PRE_SCALE)
-		print("Prescale value = " + prescale)
-		
+		prescale = self._i2c.readByte(self.address, PRE_SCALE)
+				
 		# Debug Message: 
 		if self.debug == 1:
+			# Print Pre-Scale Value
+			print("Prescale value = %d" % prescale)
+			
 			# Calculate frequency based off internal clock frequency (default)
-			est_frequency = float((prescale +1) * 4096/(25*10^6))
-			print("Est. frequency = " + int(est_frequency) + "Hz (*Based on internal clock value)")
+			est_frequency = float((25*10**6)/((prescale + 1)*4096))
+			
+			# Print Equivalent Frequency
+			print("Est. frequency = %d Hz (*Based on internal clock value)" % int(est_frequency))
 
 		return prescale
 
@@ -1285,7 +1294,7 @@ class QwiicPCA9685(object):
 		else:
 			# 
 			if ext != None:
-				if 50 * 10^6 < ext: # Checks for valid input
+				if 50 * 10**6 < ext: # Checks for valid input
 					print("Invalid external clock frequency input.")
 					return False
 				else:
@@ -1299,12 +1308,12 @@ class QwiicPCA9685(object):
 				# 	1 = External Clock Pin
 				extMode = self.get_extclock_bit()
 
-				if extMode == 0:
+				if extMode == 1:
 					print("External clock pin enabled.")						# Notifies users external clock is used	
 					osc_clock = input("Enter external clock frequency (Hz): ")	# Prompts user input
-					return False
-				elif extMode == 1:
-					osc_clock = 25 * 10^6 # 25 MHz (Default)
+					# return False
+				elif extMode == 0:
+					osc_clock = 25 * 10**6 # 25 MHz (Default)
 				# else:
 				# 	print("Error reading EXTCLK bit from MODE1 register.")
 				# 	return False
