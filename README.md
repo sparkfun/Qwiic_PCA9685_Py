@@ -32,11 +32,10 @@ This package should be used in conjunction with the overall [SparkFun qwiic Pyth
 * [Installation](#installation)
 * [Documentation](#documentation)
 * [Example Use](#example-use)
+<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
 
 Supported Platforms
 --------------------
-<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
-
 The qwiic PCA9685 Python package current supports the following platforms:
 * [Raspberry Pi](https://www.sparkfun.com/search/results?term=raspberry+pi)
 <!-- Platforms to be tested
