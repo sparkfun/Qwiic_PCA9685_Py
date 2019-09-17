@@ -380,7 +380,7 @@ class PiServoHat(object):
 	# Retrieves Servo Position on Specified Channel (in Degrees)
 	def get_servo_position(self, channel, swing = None):
 		"""
-		Reads servo to specified location in degrees.
+		Reads the specified location for the servo in degrees.
 		
 		:param channel:		Channel of Servo to Control
 							Range: 0 to 15
