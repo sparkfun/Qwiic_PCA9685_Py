@@ -87,7 +87,7 @@ _AVAILABLE_I2C_ADDRESS = [0x40]
 #_AVAILABLE_I2C_ADDRESS = _AVAILABLE_I2C_ADDRESS.remove(subAddr_3)	# Exclude Sub Addr 3
 
 # Default Servo Frequency:
-_DEFAULT_SERVO_FREQUENCY = 200	# Hz
+_DEFAULT_SERVO_FREQUENCY = 50	# Hz
 
 class PiServoHat(object):
 
@@ -119,40 +119,90 @@ class PiServoHat(object):
 	# Default Servo frequency:
 	frequency = _DEFAULT_SERVO_FREQUENCY
 	
-	def __init__(self, address=None, i2c_driver=None):
+	#----------------------------------------------
+	# Constructor
+	def __init__(self, address=None, debug = None):
+		"""
+		This method initializes the class object. If no 'address' or
+		'i2c_driver' are inputed or 'None' is specified, the method will
+		use the defaults.
+
+		:param address: 	The I2C address to use for the device.
+							If not provided, the method will default to the
+							first address in the 'available_addresses' list.
+								Default = 0x40
+		:param debug:		Designated whether or not to print debug
+							statements.
+							0-	Don't print debug statements
+							1-	Print debug statements
+		"""
 		
 		# Did the user specify an I2C address?
 		# Defaults to 0x40 if unspecified.
 		self.address = address if address != None else self.available_addresses[0]
+
+		# Do you want debug statements?
+		if debug == None:
+			self.debug = 0	# Debug Statements Disabled
+		else:
+			self.debug = debug	# Debug Statements Enabled (1)
 		
 		# Initialization
-		self.PCA9685 = QwiicPCA9685(self.address)
+		self.PCA9685 = QwiicPCA9685(self.address, debug)
 		
 		#----------------------------------------------
 		# Grab Available Channels:
-		available_pwm_channels = QwiicPCA9685.available_pwm_channels
-		
+		self.available_pwm_channels = QwiicPCA9685.available_pwm_channels
+
 		# #----------------------------------------------
 		# # Grab Current PWM Frequency
 		# self.frequency = piservohat.get_pwm_frequency()
 		
 		# #----------------------------------------------
-		# # If not 200 Hz; change
-		# if self.frequency != 200:
+		# # If not 50 Hz; #change
+		# if self.frequency != 50:
 		# 	piservohat.set_pwm_frequency(_DEFAULT_SERVO_FREQUENCY)
 		
 		#----------------------------------------------
-		# Sets PWM frequency to Default = 200 Hz
-		self.set_pwm_frequency(self.frequency)
+		# Sets PWM frequency to Default = 50 Hz
+		self.set_pwm_frequency(_DEFAULT_SERVO_FREQUENCY)
 
 		#----------------------------------------------
 		# Begin operation
 		self.PCA9685.begin()
 
+
 	#----------------------------------------------
-	# get PWM Frequency
+	# Restart PCA9685
+	def restart():
+		"""
+		Soft resets the chip and then clears the MODE1 register to restart
+		the PWM functionality. The PWM frequency is returned to the default
+		50 Hz setting.
+		"""
+		# Soft Reset Chip
+		self.PCA9685.soft_reset()
+
+		# Clear MODE1 Register
+		self.PCA9685.restart()
+
+		#----------------------------------------------
+		# Sets PWM frequency to Default = 50 Hz
+		self.set_pwm_frequency(_DEFAULT_SERVO_FREQUENCY)
+
+
+	#----------------------------------------------
+	# Read PWM Frequency
 	def get_pwm_frequency(self):
-		
+		"""
+		Reads the PWM frequency used on outputs. 50 Hz is recomended
+		for most servos.
+
+		:return:	PWM Frequency
+					Range: 24 Hz to 1526 Hz
+		:rtype:		Integer
+		"""
+
 		# Get pre-scale value (determines PWM frequency)
 		prescale = self.PCA9685.get_pre_scale()
 
@@ -162,12 +212,38 @@ class PiServoHat(object):
 		return self.frequency
 
 	#----------------------------------------------
-	# Set PWM Frequency
-	def set_pwm_frequency(self, frequency):
+	# Change PWM Frequency
+	def set_pwm_frequency(self, frequency = None):
 		"""
+		Configures the PWM frequency used on outputs. 50 Hz is the default and
+		recomended for most servos.
+
+		:param frequency:	PWM Frequency
+							Range: 24 Hz to 1526 Hz
+
+		:return:	Function Operation
+					True-	Successful
+					False-	Issue in Execution
+		:rtype:		Bool
+
 		NOTE: Changing PWM frequency affects timing for servo positioning.
+		Additionally, the servo position needs to be reset for the output
+		control (on all channels).
+		
+		The output on all channels is initially turned off after the frequency
+		change, but is re-enabled after any of the channels is reconfigured.
+		However, the new PWM frequency will be in affect, so the timing of the
+		outputs on the other channels will be off. (i.e. if a PWM frequency is
+		doubled; the that the signal is on will be halfed.)
 		"""
 		
+		# Debug message
+		if self.debug == 1:
+			print("PWM Frequency: %d" % frequency)
+		
+		if frequency == None:
+			frequency = 50	# Default (50 Hz)
+				
 		if self.PCA9685.set_pre_scale(frequency) == True:
 			self.frequency = frequency
 			return True
@@ -175,12 +251,24 @@ class PiServoHat(object):
 			return False
 
 
-	def move_servo_position(self, channel, position, speed = None):
+	#----------------------------------------------
+	# Moves Servo on Specified Channel to Position (in Degrees)
+	def move_servo_position(self, channel, position, range = None): # , delay = None, speed = None):
+		# Removed delay and speed functionality... don't think it is useful and users can specify timing in own code.
 		"""
-		Moves servo to specified location at a specified speed.
+		Moves servo to specified location in degrees.
 		
-		
-		
+		:param channel:		Channel of Servo to Control
+							Range: 0 to 15
+		:param position:	Position (Degrees)
+							Range: Open, but should between 0 and specified servo 'range'.
+							The range is not regulated because most servos have extra room
+							for play (i.e. a 90 degree servo may have a +120 degree usable
+							range). If 'None' is specified, the default setting is 90
+							degrees. 
+		:param range:		Range of Servo Movement
+							90-		90 Degree Servo
+							180-	180 Degree Servo
 		
 		NOTE: A 'speed' of 'None', changes the immediate position and
 		the servo will transition as fast a possible. This is most
@@ -188,51 +276,127 @@ class PiServoHat(object):
 		transition of multiple servos asynchonously.
 		"""
 		
-		## Check Auto-Increment Bit
-		#if self.PCA9685.get_auto_increment_bit != 1:
-			## Enable Word Reads/Writes
-			#self.PCA9685.set_auto_increment_bit(1)
-		
+		# # Check Auto-Increment Bit
+		# if self.PCA9685.get_auto_increment_bit != 1:
+		# 	# Enable Word Reads/Writes
+		# 	self.PCA9685.set_auto_increment_bit(1)
+
+		# Debug message
+		if self.debug == 1:
+			try:
+				self.available_pwm_channels.index(channel)
+			except:
+				print("available Channels list:")
+				print(self.available_pwm_channels)
+				print("Selected Channel: %d" % channel)
+
+
 		period = 1 / self.frequency			# seconds
 		resolution = period / 4096			# seconds
 
-		if speed == None:
-			# Initial Condition
-			delay = 0
-			
-			# Calculate Positioning
-			# Linear Interpolation:
-			# 	0 	Degrees	=	1.0	ms
-			# 	90	Degrees	=	1.5	ms
-			#	180	Degrees	=	2.0	ms
-			m = 1 / 180									# ms/degree
-			position_time = (m *position + 1) / 1000	# seconds (float)
-			
-			# Round Values from Float to Integers
-			on_value = round(delay)									# integer
-			off_value = round(position_time / resolution + delay)	# integer
-			
-			print(on_value)
-			print(off_value)
-			
-			# Move servo to position immediately
-			self.PCA9685.set_channel_word(channel, 1, on_value)
-			self.PCA9685.set_channel_word(channel, 0, off_value)
-		else:
-			initial_on = get_channel_word(channel, 0)
-			initial_off = get_channel_word(channel, 1)
+		# Remove delay functionality
+		# if delay == None:
+		
+		# Initial Condition
+		delay = 0
+		
+		# Calculate Positioning- Linear Interpolation:
 
-			initial_position = initial_off - initial_on
-			new_position = position_time / resolution + initial_on
+		# Debug message
+		if self.debug == 1:
+			print("Servo Range: %d" % range)
 
-			self.PCA9685.set_channel_word(channel, on_off, value = None)
+		# 180 Degree Servo Timing:
+		# 	0 	Degrees	=	1.0	ms
+		#	90	Degrees	=	1.5	ms
+		#	180	Degrees	=	2.0	ms
+		# 90 Degree Servo Timing:
+		# 	0 	Degrees	=	1.0	ms
+		# 	45	Degrees	=	1.5	ms
+		#	90	Degrees	=	2.0	ms
+		
+		if range == None:
+			range = 90	# Default
+		elif range != 90 or 180:
+			raise Exception("Error: 'range' input value. Must be 90 or 180.")
+		
+		# Servo Timing
+		m = 1 / range								# ms/degree
+		position_time = (m *position + 1) / 1000	# seconds (float)
+		
+		# Round Values from Float to Integers
+		on_value = round(delay)									# integer
+		off_value = round(position_time / resolution + delay)	# integer
 
+		# Debug message
+		if self.debug == 1:
+			print("On value: %d" % on_value)
+			print("Off value: %d" % off_value)
+			print("Total (max. 4096): %d" % (on_value + off_value))
+		
+		# Move servo to position immediately
+		self.PCA9685.set_channel_word(channel, 1, on_value)
+		self.PCA9685.set_channel_word(channel, 0, off_value)
+		
+		# Remove delay functionality
+		# else:
+		# 	delay_value = delay / resolution
 
+		# 	initial_on = self.PCA9685.get_channel_word(channel, 0)
+		# 	initial_off = self.PCA9685.get_channel_word(channel, 1)
 
+		# 	new_position = (initial_off - initial_on) + delay_value
 
-	# def change_duty_cycle(self, channel, duty_cycle):
+		# 	# Round Values from Float to Integers
+		# 	on_value = round(delay_value)		# integer
+		# 	off_value = round(new_position)		# integer
 
-	# def enableAllChannels():
-	# def disableAllChannels():
-	# def enableChannel():
-	# def disableChannel():
+		# 	# Debug message
+		# 	if self.debug == 1:
+		# 		print("Delay: %d" % delay)
+		# 		print("On value: %d" % on_value)
+		# 		print("Off value: %d" % off_value)
+		# 		print("Total (max. 4096): %d" % (on_value + off_value))
+
+	def set_duty_cycle(self, channel, duty_cycle):
+		"""
+		Moves servo to specified location based on duty-cycle.
+		
+		:param channel:		Channel of Servo to Control
+							Range: 0 to 15
+		:param duty_cycle:	Duty-Cycle (Percentage)
+							Float Range: 0 to 100 (%)
+							Resolution: 1/4096
+		"""
+		
+		# # Check Auto-Increment Bit
+		# if self.PCA9685.get_auto_increment_bit != 1:
+		# 	# Enable Word Reads/Writes
+		# 	self.PCA9685.set_auto_increment_bit(1)
+
+		# Debug message
+		if self.debug == 1:
+			try:
+				self.available_pwm_channels.index(channel)
+			except:
+				print("available Channels list:")
+				print(self.available_pwm_channels)
+				print("Selected Channel: %d" % channel)
+
+		# Initial Condition
+		delay = 0
+		
+		# Round Values from Float to Integers
+		on_value = round(delay)						# integer
+		off_value = round(duty_cycle/100*4096) - 1	# integer
+
+		# Debug message
+		if self.debug == 1:
+			print("On value: %d" % on_value)
+			print("Off value: %d" % off_value)
+			print("Total (max. 4096): %d" % (on_value + off_value))
+		
+		# Change Duty-Cycle
+		self.PCA9685.set_channel_word(channel, 1, on_value)
+		self.PCA9685.set_channel_word(channel, 0, off_value)
+
