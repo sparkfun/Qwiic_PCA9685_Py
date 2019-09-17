@@ -26,11 +26,7 @@ Python module for the PCA9685 PWM controller, which is part of the [SparkFun Ser
 
 This package should be used in conjunction with the overall [SparkFun qwiic Python Package](https://github.com/sparkfun/Qwiic_Py). New to qwiic? Take a look at the entire [SparkFun qwiic ecosystem](https://www.sparkfun.com/qwiic).
 
-<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
-
 ## Contents
-
-
 * [Supported Platforms](#supported-platforms)
 * [Dependencies](#dependencies)
 * [Installation](#installation)
@@ -39,6 +35,8 @@ This package should be used in conjunction with the overall [SparkFun qwiic Pyth
 
 Supported Platforms
 --------------------
+<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
+
 The qwiic PCA9685 Python package current supports the following platforms:
 * [Raspberry Pi](https://www.sparkfun.com/search/results?term=raspberry+pi)
 <!-- Platforms to be tested
