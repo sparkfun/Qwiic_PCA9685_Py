@@ -253,8 +253,7 @@ class PiServoHat(object):
 
 	#----------------------------------------------
 	# Moves Servo on Specified Channel to Position (in Degrees)
-	def move_servo_position(self, channel, position, range = None): # , delay = None, speed = None):
-		# Removed delay and speed functionality... don't think it is useful and users can specify timing in own code.
+	def move_servo_position(self, channel, position, range = None):
 		"""
 		Moves servo to specified location in degrees.
 		
@@ -269,11 +268,6 @@ class PiServoHat(object):
 		:param range:		Range of Servo Movement
 							90-		90 Degree Servo
 							180-	180 Degree Servo
-		
-		NOTE: A 'speed' of 'None', changes the immediate position and
-		the servo will transition as fast a possible. This is most
-		useful as an extension for a task scheduler to control the
-		transition of multiple servos asynchonously.
 		"""
 		
 		# # Check Auto-Increment Bit
@@ -294,9 +288,6 @@ class PiServoHat(object):
 		period = 1 / self.frequency			# seconds
 		resolution = period / 4096			# seconds
 
-		# Remove delay functionality
-		# if delay == None:
-		
 		# Initial Condition
 		delay = 0
 		
@@ -338,25 +329,6 @@ class PiServoHat(object):
 		self.PCA9685.set_channel_word(channel, 1, on_value)
 		self.PCA9685.set_channel_word(channel, 0, off_value)
 		
-		# Remove delay functionality
-		# else:
-		# 	delay_value = delay / resolution
-
-		# 	initial_on = self.PCA9685.get_channel_word(channel, 0)
-		# 	initial_off = self.PCA9685.get_channel_word(channel, 1)
-
-		# 	new_position = (initial_off - initial_on) + delay_value
-
-		# 	# Round Values from Float to Integers
-		# 	on_value = round(delay_value)		# integer
-		# 	off_value = round(new_position)		# integer
-
-		# 	# Debug message
-		# 	if self.debug == 1:
-		# 		print("Delay: %d" % delay)
-		# 		print("On value: %d" % on_value)
-		# 		print("Off value: %d" % off_value)
-		# 		print("Total (max. 4096): %d" % (on_value + off_value))
 
 	def set_duty_cycle(self, channel, duty_cycle):
 		"""
@@ -400,3 +372,74 @@ class PiServoHat(object):
 		self.PCA9685.set_channel_word(channel, 1, on_value)
 		self.PCA9685.set_channel_word(channel, 0, off_value)
 
+	#----------------------------------------------
+	# Retrieves Servo Position on Specified Channel (in Degrees)
+	def get_servo_position(self, channel, position, range = None):
+		"""
+		Reads servo to specified location in degrees.
+		
+		:param channel:		Channel of Servo to Control
+							Range: 0 to 15
+		:param position:	Position (Degrees)
+							Range: Open, but should between 0 and specified servo 'range'.
+							The range is not regulated because most servos have extra room
+							for play (i.e. a 90 degree servo may have a +120 degree usable
+							range). If 'None' is specified, the default setting is 90
+							degrees. 
+		"""
+		
+		# # Check Auto-Increment Bit
+		# if self.PCA9685.get_auto_increment_bit != 1:
+		# 	# Enable Word Reads/Writes
+		# 	self.PCA9685.set_auto_increment_bit(1)
+
+		# Debug message
+		if self.debug == 1:
+			try:
+				self.available_pwm_channels.index(channel)
+			except:
+				print("available Channels list:")
+				print(self.available_pwm_channels)
+				print("Selected Channel: %d" % channel)
+
+		initial_on = self.PCA9685.get_channel_word(channel, 0)
+		initial_off = self.PCA9685.get_channel_word(channel, 1)
+
+		# Debug message
+		if self.debug == 1:
+			print("On value: %d" % initial_on)
+			print("Off value: %d" % initial_off)
+			print("Total (max. 4096): %d" % (initial_on + initial_off))
+			print("Difference: %d" % (initial_off - initial_on))
+
+		period = 1 / self.frequency			# seconds
+		resolution = period / 4096			# seconds
+
+		# Debug message
+		if self.debug == 1:
+			print("Servo Range: %d" % range)
+
+		# 180 Degree Servo Timing:
+		# 	0 	Degrees	=	1.0	ms
+		#	90	Degrees	=	1.5	ms
+		#	180	Degrees	=	2.0	ms
+		# 90 Degree Servo Timing:
+		# 	0 	Degrees	=	1.0	ms
+		# 	45	Degrees	=	1.5	ms
+		#	90	Degrees	=	2.0	ms
+		
+		if range == None:
+			range = 90	# Default
+		elif range != 90 or 180:
+			raise Exception("Error: 'range' input value. Must be 90 or 180.")
+		
+		# Servo Timing
+		m = 1 / range											# ms/degree
+		difference = (initial_off - initial_on) / resolution	# steps/second
+		position = ((difference * 1000) - 1)/m					# degrees
+
+		# Debug message
+		if self.debug == 1:
+			print("On value: %d" % initial_on)
+		
+		return position
