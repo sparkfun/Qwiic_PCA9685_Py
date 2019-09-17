@@ -29,10 +29,10 @@ This package should be used in conjunction with the overall [SparkFun qwiic Pyth
 ## Contents
 * [Supported Platforms](#supported-platforms)
 * [Dependencies](#dependencies)
+<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
 * [Installation](#installation)
 * [Documentation](#documentation)
 * [Example Use](#example-use)
-<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=300 alt="SparkFun Pi Servo HAT">
 
 Supported Platforms
 --------------------
