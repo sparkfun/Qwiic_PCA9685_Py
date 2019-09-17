@@ -20,8 +20,7 @@ Qwiic_PCA9685_Py
 	
 </p>
 
-<img src="https://cdn.sparkfun.com/assets/parts/1/3/8/2/7/15316-SparkFun_Servo_pHAT_for_Raspberry_Pi-01b.jpg"  align="right" width=300 alt="SparkFun Servo pHAT for the Raspberry Pi">
-<img src="https://cdn.sparkfun.com/assets/parts/1/2/3/0/2/14328-01.jpg"  align="right" width=250 alt="SparkFun Pi Servo HAT">
+<img src="https://cdn.sparkfun.com/assets/parts/1/3/8/2/7/15316-SparkFun_Servo_pHAT_for_Raspberry_Pi-01b.jpg"  align="right" width=250 alt="SparkFun Servo pHAT for the Raspberry Pi">
 
 Python module for the PCA9685 PWM controller, which is part of the [SparkFun Servo pHAT for Raspberry Pi](https://www.sparkfun.com/products/15316) and [SparkFun Pi Servo HAT](https://www.sparkfun.com/products/14328)
 
