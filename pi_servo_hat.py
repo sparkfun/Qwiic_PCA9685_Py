@@ -253,19 +253,19 @@ class PiServoHat(object):
 
 	#----------------------------------------------
 	# Moves Servo on Specified Channel to Position (in Degrees)
-	def move_servo_position(self, channel, position, range = None):
+	def move_servo_position(self, channel, position, swing = None):
 		"""
 		Moves servo to specified location in degrees.
 		
 		:param channel:		Channel of Servo to Control
 							Range: 0 to 15
 		:param position:	Position (Degrees)
-							Range: Open, but should between 0 and specified servo 'range'.
+							Range: Open, but should between 0 and specified servo 'swing'.
 							The range is not regulated because most servos have extra room
 							for play (i.e. a 90 degree servo may have a +120 degree usable
-							range). If 'None' is specified, the default setting is 90
+							swing). If 'None' is specified, the default setting is 90
 							degrees. 
-		:param range:		Range of Servo Movement
+		:param swing:		Range of Servo Movement
 							90-		90 Degree Servo
 							180-	180 Degree Servo
 		"""
@@ -295,7 +295,7 @@ class PiServoHat(object):
 
 		# Debug message
 		if self.debug == 1:
-			print("Servo Range: %d" % range)
+			print("Servo Range: %d" % swing)
 
 		# 180 Degree Servo Timing:
 		# 	0 	Degrees	=	1.0	ms
@@ -306,13 +306,13 @@ class PiServoHat(object):
 		# 	45	Degrees	=	1.5	ms
 		#	90	Degrees	=	2.0	ms
 		
-		if range == None:
-			range = 90	# Default
-		elif range != 90 or 180:
-			raise Exception("Error: 'range' input value. Must be 90 or 180.")
+		if swing == None:
+			swing = 90	# Default
+		elif swing != 90 and swing != 180:
+			raise Exception("Error: 'swing' input value. Must be 90 or 180.")
 		
 		# Servo Timing
-		m = 1 / range								# ms/degree
+		m = 1 / swing								# ms/degree
 		position_time = (m *position + 1) / 1000	# seconds (float)
 		
 		# Round Values from Float to Integers
@@ -374,18 +374,18 @@ class PiServoHat(object):
 
 	#----------------------------------------------
 	# Retrieves Servo Position on Specified Channel (in Degrees)
-	def get_servo_position(self, channel, position, range = None):
+	def get_servo_position(self, channel, swing = None):
 		"""
 		Reads servo to specified location in degrees.
 		
 		:param channel:		Channel of Servo to Control
 							Range: 0 to 15
-		:param position:	Position (Degrees)
-							Range: Open, but should between 0 and specified servo 'range'.
-							The range is not regulated because most servos have extra room
-							for play (i.e. a 90 degree servo may have a +120 degree usable
-							range). If 'None' is specified, the default setting is 90
-							degrees. 
+		:param swing:		Range of Servo Movement
+							90-		90 Degree Servo
+							180-	180 Degree Servo
+		
+		:return:			Esitmated Position (Degrees)
+		:rtype:				Float
 		"""
 		
 		# # Check Auto-Increment Bit
@@ -410,14 +410,14 @@ class PiServoHat(object):
 			print("On value: %d" % initial_on)
 			print("Off value: %d" % initial_off)
 			print("Total (max. 4096): %d" % (initial_on + initial_off))
-			print("Difference: %d" % (initial_off - initial_on))
+			print("Difference: %d" % (initial_on - initial_off))
 
 		period = 1 / self.frequency			# seconds
 		resolution = period / 4096			# seconds
 
 		# Debug message
 		if self.debug == 1:
-			print("Servo Range: %d" % range)
+			print("Servo Range: %d" % swing)
 
 		# 180 Degree Servo Timing:
 		# 	0 	Degrees	=	1.0	ms
@@ -428,15 +428,16 @@ class PiServoHat(object):
 		# 	45	Degrees	=	1.5	ms
 		#	90	Degrees	=	2.0	ms
 		
-		if range == None:
-			range = 90	# Default
-		elif range != 90 or 180:
-			raise Exception("Error: 'range' input value. Must be 90 or 180.")
+		if swing == None:
+			swing = 90	# Default
+		elif swing != 90 and swing != 180:
+			raise Exception("Error: 'swing' input value. Must be 90 or 180.")
+			
 		
 		# Servo Timing
-		m = 1 / range											# ms/degree
-		difference = (initial_off - initial_on) / resolution	# steps/second
-		position = ((difference * 1000) - 1)/m					# degrees
+		m = 1 / swing											# ms/degree
+		difference = (initial_on - initial_off) * resolution	# steps/second
+		position = ((difference * 1000) - 1) / m				# degrees
 
 		# Debug message
 		if self.debug == 1:
