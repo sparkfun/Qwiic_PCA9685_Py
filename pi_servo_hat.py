@@ -53,14 +53,14 @@ Python module for the [SparkFun Pi Servo HAT](https://www.sparkfun.com/products/
 This package should be used in conjunction with the sparkfun_pca9685
 package.
 """
-#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------
 
 
 # Load Necessary Modules:
-import time						# Time access and conversion package
-import math						# Basic math package
-from qwiic_pca9685 import QwiicPCA9685			# PCA9685 LED driver package
-								# (used on Pi Servo pHAT)
+import time								# Time access and conversion package
+import math								# Basic math package
+from qwiic_pca9685 import QwiicPCA9685	# PCA9685 LED driver package
+										# (used on Pi Servo pHAT)
 
 # Device Name:
 _DEFAULT_NAME = "Pi Servo HAT"
@@ -128,8 +128,9 @@ class PiServoHat(object):
 		use the defaults.
 
 		:param address: 	The I2C address to use for the device.
-							If not provided, the method will default to the
-							first address in the 'available_addresses' list.
+							If not provided, the method will default to
+							the first address in the
+							'available_addresses' list.
 								Default = 0x40
 		:param debug:		Designated whether or not to print debug
 							statements.
@@ -176,9 +177,9 @@ class PiServoHat(object):
 	# Restart PCA9685
 	def restart():
 		"""
-		Soft resets the chip and then clears the MODE1 register to restart
-		the PWM functionality. The PWM frequency is returned to the default
-		50 Hz setting.
+		Soft resets the chip and then clears the MODE1 register to
+		restart the PWM functionality. The PWM frequency is returned to
+		the default 50 Hz setting.
 		"""
 		# Soft Reset Chip
 		self.PCA9685.soft_reset()
@@ -215,8 +216,8 @@ class PiServoHat(object):
 	# Change PWM Frequency
 	def set_pwm_frequency(self, frequency = None):
 		"""
-		Configures the PWM frequency used on outputs. 50 Hz is the default and
-		recomended for most servos.
+		Configures the PWM frequency used on outputs. 50 Hz is the
+		default and recomended for most servos.
 
 		:param frequency:	PWM Frequency
 							Range: 24 Hz to 1526 Hz
@@ -226,20 +227,21 @@ class PiServoHat(object):
 					False-	Issue in Execution
 		:rtype:		Bool
 
-		NOTE: Changing PWM frequency affects timing for servo positioning.
-		Additionally, the servo position needs to be reset for the output
-		control (on all channels).
+		NOTE: Changing PWM frequency affects timing for servo
+		positioning. Additionally, the servo position needs to be reset
+		for the output control (on all channels).
 		
-		The output on all channels is initially turned off after the frequency
-		change, but is re-enabled after any of the channels is reconfigured.
-		However, the new PWM frequency will be in affect, so the timing of the
-		outputs on the other channels will be off. (i.e. if a PWM frequency is
-		doubled; the that the signal is on will be halfed.)
+		The output on all channels is initially turned off after the
+		frequency change, but is re-enabled after any of the channels is
+		reconfigured. However, the new PWM frequency will be in affect,
+		so the timing of the outputs on the other channels will be off.
+		(i.e. if a PWM frequency is doubled; the timing of that signal
+		may be halfed.)
 		"""
 		
 		# Debug message
 		if self.debug == 1:
-			print("PWM Frequency: %d" % frequency)
+			print("PWM Frequency: %s" % frequency)
 		
 		if frequency == None:
 			frequency = 50	# Default (50 Hz)
@@ -260,10 +262,12 @@ class PiServoHat(object):
 		:param channel:		Channel of Servo to Control
 							Range: 0 to 15
 		:param position:	Position (Degrees)
-							Range: Open, but should between 0 and specified servo 'swing'.
-							The range is not regulated because most servos have extra room
-							for play (i.e. a 90 degree servo may have a +120 degree usable
-							swing). If 'None' is specified, the default setting is 90
+							Range: Open, but should between 0 and
+							specified servo 'swing'. The range is not
+							regulated because most servos have extra
+							room for play (i.e. a 90 degree servo may
+							have a +120 degree usable swing). If 'None'
+							is specified, the default setting is 90
 							degrees. 
 		:param swing:		Range of Servo Movement
 							90-		90 Degree Servo
@@ -282,7 +286,7 @@ class PiServoHat(object):
 			except:
 				print("available Channels list:")
 				print(self.available_pwm_channels)
-				print("Selected Channel: %d" % channel)
+				print("Selected Channel: %s" % channel)
 
 
 		period = 1 / self.frequency			# seconds
@@ -295,7 +299,7 @@ class PiServoHat(object):
 
 		# Debug message
 		if self.debug == 1:
-			print("Servo Range: %d" % swing)
+			print("Servo Range: %s" % swing)
 
 		# 180 Degree Servo Timing:
 		# 	0 	Degrees	=	1.0	ms
@@ -321,9 +325,9 @@ class PiServoHat(object):
 
 		# Debug message
 		if self.debug == 1:
-			print("On value: %d" % on_value)
-			print("Off value: %d" % off_value)
-			print("Total (max. 4096): %d" % (on_value + off_value))
+			print("On value: %s" % on_value)
+			print("Off value: %s" % off_value)
+			print("Total (max. 4096): %s" % (on_value + off_value))
 		
 		# Move servo to position immediately
 		self.PCA9685.set_channel_word(channel, 1, on_value)
@@ -353,7 +357,7 @@ class PiServoHat(object):
 			except:
 				print("available Channels list:")
 				print(self.available_pwm_channels)
-				print("Selected Channel: %d" % channel)
+				print("Selected Channel: %s" % channel)
 
 		# Initial Condition
 		delay = 0
@@ -364,9 +368,9 @@ class PiServoHat(object):
 
 		# Debug message
 		if self.debug == 1:
-			print("On value: %d" % on_value)
-			print("Off value: %d" % off_value)
-			print("Total (max. 4096): %d" % (on_value + off_value))
+			print("On value: %s" % on_value)
+			print("Off value: %s" % off_value)
+			print("Total (max. 4096): %s" % (on_value + off_value))
 		
 		# Change Duty-Cycle
 		self.PCA9685.set_channel_word(channel, 1, on_value)
@@ -400,24 +404,24 @@ class PiServoHat(object):
 			except:
 				print("available Channels list:")
 				print(self.available_pwm_channels)
-				print("Selected Channel: %d" % channel)
+				print("Selected Channel: %s" % channel)
 
 		initial_on = self.PCA9685.get_channel_word(channel, 0)
 		initial_off = self.PCA9685.get_channel_word(channel, 1)
 
 		# Debug message
 		if self.debug == 1:
-			print("On value: %d" % initial_on)
-			print("Off value: %d" % initial_off)
-			print("Total (max. 4096): %d" % (initial_on + initial_off))
-			print("Difference: %d" % (initial_on - initial_off))
+			print("On value: %s" % initial_on)
+			print("Off value: %s" % initial_off)
+			print("Total (max. 4096): %s" % (initial_on + initial_off))
+			print("Difference: %s" % (initial_on - initial_off))
 
 		period = 1 / self.frequency			# seconds
 		resolution = period / 4096			# seconds
 
 		# Debug message
 		if self.debug == 1:
-			print("Servo Range: %d" % swing)
+			print("Servo Range: %s" % swing)
 
 		# 180 Degree Servo Timing:
 		# 	0 	Degrees	=	1.0	ms
@@ -441,6 +445,6 @@ class PiServoHat(object):
 
 		# Debug message
 		if self.debug == 1:
-			print("On value: %d" % initial_on)
+			print("On value: %s" % initial_on)
 		
 		return position

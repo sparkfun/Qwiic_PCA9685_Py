@@ -21,27 +21,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http:www.gnu.org/licenses/>.
 #
-#==================================================================================
+#=======================================================================
 # Copyright (c) 2019 SparkFun Electronics
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#==================================================================================
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#=======================================================================
 #
 # pylint: disable=line-too-long, bad-whitespace, invalid-name
 
@@ -65,8 +66,8 @@ _DEFAULT_NAME = "Qwiic PCA9685"
 # Device Address:
 #----------------------------------------------
 """
-Some devices have multiple available addresses - this is a list of
-these addresses.
+Some devices have multiple available addresses - this is a list of these
+addresses.
 NOTE: The first address in this list is considered the default I2C
 address for the device.
 
@@ -103,8 +104,9 @@ _AVAILABLE_I2C_ADDRESS = list(range(0x40,0x7F+1))		# Full Address List
 
 # Special Use Addresses:
 _gcAddr =		0x00 	# General Call address for software reset
-_acAddr =		0x70	# All Call address- used for modifications to multiple PCA9685 chips
-						# reguardless of thier I2C address set by hardware pins (A0 to A5).
+_acAddr =		0x70	# All Call address- used for modifications to
+						# multiple PCA9685 chips reguardless of thier
+						# I2C address set by hardware pins (A0 to A5).
 _subAddr_1 =	0x71	# 1110 001X or 0xE2 (7-bit)
 _subAddr_2 =	0x72	# 1110 010X or 0xE4 (7-bit)
 _subAddr_3 =	0x74	# 1110 100X or 0xE8 (7-bit)
@@ -124,8 +126,9 @@ _SWRST =	0x06 	# Equivalent of reset byte 0000 011
 """
 List of available registers and their functions
 
-According to the datasheet, these registers are access by the 'Control Register',
-which acts as a pointer register. The control register takes the following format:
+According to the datasheet, these registers are access by the 'Control
+Register', which acts as a pointer register. The control register takes
+the following format:
 
 [D7 D6 D5 D4 D3 D2 D1 D0]
 
@@ -133,9 +136,9 @@ Reset State = 00h
 
 To list all available registers:
 list(range(69+1)) + list(range(250, 255+1))
-Auto Increment past register 69 will point to MODE1 register (register 0). Auto
-Increment also works from register 250 to register 254, then rolls over to
-register 0.
+Auto Increment past register 69 will point to MODE1 register (register
+0). Auto Increment also works from register 250 to register 254, then
+rolls over to register 0.
 """
 
 MODE1 = 			0x00	# Mode register 1
@@ -237,7 +240,8 @@ _TESTMODE = 		0xFF	# Defines test mode to be entered (Should not be used!)
 # PWM Channels
 #----------------------------------------------
 """
-This device has multiple PWM channels - this is a list of these channels.
+This device has multiple PWM channels - this is a list of these
+channels.
 NOTE: The first address in this list is considered the default PWM
 channel for the device.
 
@@ -256,9 +260,10 @@ class QwiicPCA9685(object):
 	Initialise the PCA9685 chip at ``address`` with ``i2c_driver``.
 
 		:param address:		The I2C address to use for the device.
-							If not provided, the default address is used.
-		:param i2c_driver:	An existing i2c driver object. If not provided
-							a driver object is created.
+							If not provided, the default address is
+							used.
+		:param i2c_driver:	An existing i2c driver object. If not
+							provided a driver object is created.
 		
 		:return:			Constructor Initialization
 							True-	Successful
@@ -286,16 +291,18 @@ class QwiicPCA9685(object):
 		use the defaults.
 
 		:param address: 	The I2C address to use for the device.
-							If not provided, the method will default to the
-							first address in the 'available_addresses' list.
+							If not provided, the method will default to
+							the first address in the
+							'available_addresses' list.
 								Default = 0x40
 		:param debug:		Designated whether or not to print debug
 							statements.
 							0-	Don't print debug statements
 							1-	Print debug statements
-		:param i2c_driver:	An existing i2c driver object. If not provided
-							a driver object is created from the 'qwiic_i2c'
-							I2C driver of the SparkFun Qwiic library.
+		:param i2c_driver:	An existing i2c driver object. If not
+							provided a driver object is created from the
+							'qwiic_i2c' I2C driver of the SparkFun Qwiic
+							library.
 		"""
 
 		# Did the user specify an I2C address?
@@ -318,9 +325,9 @@ class QwiicPCA9685(object):
 			self.debug = debug	# Debug Statements Enabled (1)
 
 
-#==================================================================================
+#=======================================================================
 # Secondary Functions
-#==================================================================================
+#=======================================================================
 
 	#----------------------------------------------
 	# Reads value of specific bit in byte
@@ -350,8 +357,8 @@ class QwiicPCA9685(object):
 			# Debug Message: 
 			if self.debug == 1:
 				print("Bit number is outside the bounds of the byte length.")
-			# Returns 0 because bit location is outside the length of the byte
-			# (i.e. leading zeros)
+			# Returns 0 because bit location is outside the length of
+			# the byte (i.e. leading zeros)
 			return 0
 		else:
 			mask = 1 << bit_number
@@ -363,12 +370,14 @@ class QwiicPCA9685(object):
 	# Writes value to specific bit in byte
 	def __writeBit__(self, byte, bit_number, value):
 		"""
-		This method modifies a byte at specific bit, with a specified value.
+		This method modifies a byte at specific bit, with a specified
+		value.
 
 		:param byte:		Integer or Hex value.
 		:param bit_number:	The index number of the bit you are
 							interested in, starting from LSB = 0.
-		:param value:		Value to be set at specific bit location (0 or 1).
+		:param value:		Value to be set at specific bit location (0
+							or 1).
 
 		:return: Value of modified byte
 		:rtype: Integer
@@ -397,8 +406,8 @@ class QwiicPCA9685(object):
 			# Debug Message: 
 			if self.debug == 1:
 				print("Bit number is outside the bounds of the byte length.")
-				print("Bit number: %d" % bit_number)
-				print("Byte length: %d" % len(bin(byte)))
+				print("Bit number: %s" % bit_number)
+				print("Byte length: %s" % len(bin(byte)))
 
 			# A mask with length of bit_number with all bits of "value"
 			bit_mask = (1 - value) * (2**bit_number -1)
@@ -416,8 +425,8 @@ class QwiicPCA9685(object):
 	# Checks I2C connection
 	def is_connected(self):
 		"""
-		This method checks if the "i2c_driver" can connect to the device at
-		the specified or default address.
+		This method checks if the "i2c_driver" can connect to the device
+		at the specified or default address.
 
 		:return:	Device Connection
 					True-	Successful
@@ -442,7 +451,8 @@ class QwiicPCA9685(object):
 	
 		:return:			Value of specified address bit.
 							0-	Normal Mode
-							1-	Low Power Mode; Oscillator Off. (Default)
+							1-	Low Power Mode; Oscillator Off.
+								(Default)
 		:rtype:				Integer
 		"""
 		
@@ -450,7 +460,7 @@ class QwiicPCA9685(object):
 		mode1 = self._i2c.readByte(self.address, MODE1)
 
 		if addr_bit == None:				# If no input for addr_bit, sets to ALLCALL
-			get_addr_bit = 0					# ALLCALL bit
+			get_addr_bit = 0				# ALLCALL bit
 		elif addr_bit < 0 or addr_bit > 3:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
@@ -476,9 +486,10 @@ class QwiicPCA9685(object):
 							2-	SUB2 Bit
 							3-	SUB3 Bit
 		:param value:		Specify address bit.
-							0-	Disables specified address (Default on SUB1,
-								SUB2, SUB3)
-							1-	Enables specified address (Default on ALLCALL)
+							0-	Disables specified address (Default on
+								SUB1, SUB2, SUB3)
+							1-	Enables specified address (Default on
+								ALLCALL)
 		"""
 		
 		# Read MODE1 register
@@ -510,8 +521,8 @@ class QwiicPCA9685(object):
 	# Checks Value of SLEEP Bit
 	def get_sleep_bit(self):
 		"""
-		Reads value of SLEEP bit in MODE 1 register. When enabled, it the
-		chip there is no PWM control.
+		Reads value of SLEEP bit in MODE 1 register. When enabled, it
+		the chip there is no PWM control.
 
 		:return:	Value of SLEEP bit.
 					0-	Normal Mode
@@ -564,8 +575,8 @@ class QwiicPCA9685(object):
 	# Checks Value of AI Bit
 	def get_auto_increment_bit(self):
 		"""
-		Reads value of AI bit in MODE 1 register. When enabled, it allows
-		users to write of multiple bytes (i.e. words).
+		Reads value of AI bit in MODE 1 register. When enabled, it
+		allows users to write of multiple bytes (i.e. words).
 
 		:return:	Value of AI bit.
 					0-	Auto-Increment Disabled (Default)
@@ -588,8 +599,8 @@ class QwiicPCA9685(object):
 	# Writes Value to AI Bit
 	def set_auto_increment_bit(self, value = None):
 		"""
-		Changes value of AI bit in MODE 1 register. When enabled, it allows
-		users to write of multiple bytes (i.e. words).
+		Changes value of AI bit in MODE 1 register. When enabled, it
+		allows users to write of multiple bytes (i.e. words).
 
 		:param value:	Value to set AI bit.
 						0-	Auto-Increment Disabled (Default)
@@ -633,9 +644,9 @@ class QwiicPCA9685(object):
 					1-	Use EXTCLK Pin Clock.
 		:rtype:		Integer
 
-		NOTE: This bit is a "sticky bit", that is, it cannot be cleared	by
-		writing a logic 0 to it. The EXTCLK can only be cleared by a power
-		cycle or software reset.
+		NOTE: This bit is a "sticky bit", that is, it cannot be cleared
+		by writing a logic 0 to it. The EXTCLK can only be cleared by a
+		power cycle or software reset.
 		"""
 
 		# Read MODE1 register
@@ -717,9 +728,9 @@ class QwiicPCA9685(object):
 	# Checks Value of OUTNE Bits
 	def get_outne_bits(self):
 		"""
-		Reads value of OUTNE bits in MODE 2 register. When the active LOW
-		output (OE pin) is enabled, this setting allows users to enable or
-		disable all the LED outputs at the same time.
+		Reads value of OUTNE bits in MODE 2 register. When the active
+		LOW output (OE pin) is enabled, this setting allows users to
+		enable or disable all the LED outputs at the same time.
 
 		:return:	Value of OUTNE bits. When OE = 1:
 					0-		LEDn = 0
@@ -748,9 +759,9 @@ class QwiicPCA9685(object):
 	# Writes Value to OUTNE Bits
 	def set_outne_bit(self, value = None):
 		"""
-		Reads value of OUTNE bits in MODE 2 register. When the active LOW
-		output (OE pin) is enabled, this setting allows users to enable or
-		disable all the LED outputs at the same time.
+		Reads value of OUTNE bits in MODE 2 register. When the active
+		LOW output (OE pin) is enabled, this setting allows users to
+		enable or disable all the LED outputs at the same time.
 
 		:param value:	Value of OUTNE bits. When OE = 1:
 						0-		LEDn = 0
@@ -799,12 +810,14 @@ class QwiicPCA9685(object):
 	# Checks Value of OUTDRV Bit
 	def get_outdrv_bit(self):
 		"""
-		Reads value of OUTDRV bit in MODE 2 register. Determines how the outputs
-		are driven.
+		Reads value of OUTDRV bit in MODE 2 register. Determines how the
+		outputs are driven.
 
 		:return:	Value of OUTDRV bits.
-					0-	Outputs are configured with an open-drain structure
-					1-	Outputs are configured with a totem-pole structure
+					0-	Outputs are configured with an open-drain
+						structure
+					1-	Outputs are configured with a totem-pole
+						structure
 		:rtype:		Integer
 		"""
 		
@@ -822,12 +835,14 @@ class QwiicPCA9685(object):
 	# Writes Value to OUTDRV Bits
 	def set_outdrv_bit(self, value = None):
 		"""
-		Reads value of OUTDRV bits in MODE 2 register. Configures how the outputs
-		are driven.
+		Reads value of OUTDRV bits in MODE 2 register. Configures how
+		the outputs are driven.
 
 		:param value:	Value of OUTDRV bits.
-						0-	Outputs are configured with an open-drain structure
-						1-	Outputs are configured with a totem-pole structure
+						0-	Outputs are configured with an open-drain
+							structure
+						1-	Outputs are configured with a totem-pole
+							structure
 		"""
 		
 		# Read MODE2 register
@@ -857,19 +872,21 @@ class QwiicPCA9685(object):
 	# Checks Value of OCH Bit
 	def get_och_bit(self):
 		"""
-		Reads value of OCH bit in MODE 2 register. Determines when the outputs
-		change.
+		Reads value of OCH bit in MODE 2 register. Determines when the
+		outputs change.
 
 		:return:	Value of OCH bits.
 					0-	Outputs change on STOP command.
-						NOTE: Change of the outputs at the STOP command	allows
-						synchronizing outputs of more than one PCA9685.
-						Applicable to registers from 06h (LED0_ON_L) to 45h
-						(LED15_OFF_H) only. 1 or more registers can be written,
-						in any order, before STOP
+						NOTE: Change of the outputs at the STOP command
+						allows synchronizing outputs of more than one
+						PCA9685. Applicable to registers from 06h
+						(LED0_ON_L) to 45h (LED15_OFF_H) only. 1 or more
+						registers can be written, in any order, before
+						STOP.
 					1-	Outputs change on ACK.
-						NOTE: Update on ACK requires all 4 PWM channel registers
-						to be loaded before outputs will change on the last ACK.
+						NOTE: Update on ACK requires all 4 PWM channel
+						registers to be loaded before outputs will
+						change on the last ACK.
 		:rtype:		Integer
 		"""
 		
@@ -887,20 +904,21 @@ class QwiicPCA9685(object):
 	# Writes Value to OCH Bits
 	def set_och_bit(self, value = None):
 		"""
-		Reads value of OCH bits in MODE 2 register. Configures when the outputs
-		change.
+		Reads value of OCH bits in MODE 2 register. Configures when the
+		outputs change.
 
 		:param value:	Value of OCH bits.
 						0-	Outputs change on STOP command.
-							NOTE: Change of the outputs at the STOP command
-							allows synchronizing outputs of more than one PCA9685.
-							Applicable to registers from 06h (LED0_ON_L) to 45h
-							(LED15_OFF_H) only. 1 or more registers can be
-							written, in any order, before STOP.
+							NOTE: Change of the outputs at the STOP
+							command allows synchronizing outputs of more
+							than one PCA9685. Applicable to registers
+							from 06h (LED0_ON_L) to 45h (LED15_OFF_H)
+							only. 1 or more registers can be written,
+							in any order, before STOP.
 						1-	Outputs change on ACK.
-							NOTE: Update on ACK requires all 4 PWM channel
-							registers to be loaded before outputs will change
-							on the last ACK.
+							NOTE: Update on ACK requires all 4 PWM
+							channel registers to be loaded before
+							outputs will change on the last ACK.
 		"""
 		
 		# Read MODE2 register
@@ -930,9 +948,9 @@ class QwiicPCA9685(object):
 	# Checks Value of INVRT Bit
 	def get_invrt_bit(self):
 		"""
-		Reads value of INVRT bit in MODE 2 register. Determines how the outputs
-		are driven. See Section 7.7 “Using the PCA9685 with and without external
-		drivers” of the datasheet.
+		Reads value of INVRT bit in MODE 2 register. Determines how the
+		outputs are driven. See Section 7.7 “Using the PCA9685 with and
+		without external drivers” of the datasheet.
 
 		:return:	Value of INVRT bits.
 					0-	Outputs change on STOP command.
@@ -954,9 +972,9 @@ class QwiicPCA9685(object):
 	# Writes Value to INVRT bit
 	def set_invrt_bit(self, value = None):
 		"""
-		Configures value of INVRT bits in MODE 2 register. Configures how the
-		outputs	are driven. See Section 7.7 “Using the PCA9685 with and without
-		external drivers” of the datasheet.
+		Configures value of INVRT bits in MODE 2 register. Configures
+		how the outputs	are driven. See Section 7.7 “Using the PCA9685
+		with and without external drivers” of the datasheet.
 
 
 		:param value:	Value of INVRT bits.
@@ -996,19 +1014,20 @@ class QwiicPCA9685(object):
 		:param channel:	PWM channel.
 						0 to 16
 		:param on_off:	On or Off setting.
-						0-	ON Start timing (anything greater than 0 is considered a delay)
+						0-	ON Start timing (anything greater than 0 is
+							considered a delay)
 						1-	OFF Start timing (end of ON timing)
 
 		:return: Word (2 bytes)
 
-		NOTE: There are two 12-bit registers per LED output. Both registers
-		will hold a value from 0 to 4095. One 12-bit register will hold a
-		value for the ON time and the other 12-bit register will hold the
-		value for the OFF time.
+		NOTE: There are two 12-bit registers per LED output. Both
+		registers will hold a value from 0 to 4095. One 12-bit register
+		will hold a value for the ON time and the other 12-bit register
+		will hold the value for the OFF time.
 
-		The ON and OFF times are compared with the value of a 12-bit counter
-		that will be running continuously from 0000h to 0FFFh (0 to 4095
-		decimal).
+		The ON and OFF times are compared with the value of a 12-bit
+		counter that will be running continuously from 0000h to 0FFFh (0
+		to 4095 decimal).
 		"""
 
 		# Did the user specify a PWM channel?
@@ -1033,7 +1052,7 @@ class QwiicPCA9685(object):
 
 		# Debug Message: 
 		if self.debug == 1:
-			print("Stored value is: %d" % value)
+			print("Stored value is: %s" % value)
 
 		return value
 
@@ -1047,10 +1066,11 @@ class QwiicPCA9685(object):
 		:param channel:	PWM channel.
 						0 to 16
 		:param on_off:	ON/OFF setting.
-						0-	ON Start timing (anything greater than 0 is considered a delay)
+						0-	ON Start timing (anything greater than 0 is
+							considered a delay)
 						1-	OFF Start timing (end of ON timing)
-		:param value:	Value to be entered into the ON/OFF 12-bit register
-						for the specified LED output.
+		:param value:	Value to be entered into the ON/OFF 12-bit
+						register for the specified LED output.
 						Word (2 bytes)
 
 		:return:	Function Operation
@@ -1058,14 +1078,14 @@ class QwiicPCA9685(object):
 					False-	Issue in Execution
 		:rtype:		Bool
 
-		NOTE: There are two 12-bit registers per LED output. Both registers
-		will hold a value from 0 to 4095. One 12-bit register will hold a
-		value for the ON time and the other 12-bit register will hold the
-		value for the OFF time.
+		NOTE: There are two 12-bit registers per LED output. Both
+		registers will hold a value from 0 to 4095. One 12-bit register
+		will hold a value for the ON time and the other 12-bit register
+		will hold the value for the OFF time.
 
-		The ON and OFF times are compared with the value of a 12-bit counter
-		that will be running continuously from 0000h to 0FFFh (0 to 4095
-		decimal).
+		The ON and OFF times are compared with the value of a 12-bit
+		counter that will be running continuously from 0000h to 0FFFh (0
+		to 4095 decimal).
 		"""
 
 		# Did the user specify a PWM channel?
@@ -1083,7 +1103,7 @@ class QwiicPCA9685(object):
 			# Debug Message: 
 			if self.debug == 1:
 				print("Error: Invalid input. Value out of bounds (Range = 0 - 4095).")
-			# raise Exception("Error: Invalid input. Value out of bounds (Range = 0 - 4095). Entered value: %d" % value)
+			# raise Exception("Error: Invalid input. Value out of bounds (Range = 0 - 4095). Entered value: %s" % value)
 			return False
 
 		if on_off == None:
@@ -1097,9 +1117,9 @@ class QwiicPCA9685(object):
 		return True
 
 
-#==================================================================================
+#=======================================================================
 # Primary Functions
-#==================================================================================
+#=======================================================================
 
 	#----------------------------------------------
 	# Begin
@@ -1107,8 +1127,8 @@ class QwiicPCA9685(object):
 	# PWM control functions.
 	def begin(self):
 		"""
-		This method checks if there is an I2C connection then enables the
-		Auto-Increment bit for the writing/reading of words (for the
+		This method checks if there is an I2C connection then enables
+		the Auto-Increment bit for the writing/reading of words (for the
 		output timing).
 
 		:return:	Function Operation
@@ -1147,9 +1167,9 @@ class QwiicPCA9685(object):
 							Acknowldege from Slave
 		
 		PCA9685 then resets to the default value (power-up value) and is
-		ready to be addressed again within the specified bus free time. A
-		falure or non-acknowledge from the PCA9685 (at any time) should
-		be interpreted as a "SWRST Call Abort".
+		ready to be addressed again within the specified bus free time.
+		A falure or non-acknowledge from the PCA9685 (at any time)
+		should be interpreted as a "SWRST Call Abort".
 		"""
 		
 		self._i2c.writeCommand(_gcAddr, _SWRST)
@@ -1159,7 +1179,8 @@ class QwiicPCA9685(object):
 	# Restart
 	def restart(self):
 		"""
-		Restarts the PCA9685 after the soft reset. (Clears MODE1 register.)
+		Restarts the PCA9685 after the soft reset. (Clears MODE1
+		register.)
 		"""
 		
 		self._i2c.writeByte(self.address, MODE1, 0x00)
@@ -1169,8 +1190,8 @@ class QwiicPCA9685(object):
 	# Read Prescale Value
 	def get_pre_scale(self):
 		""" 	
-		Reads the frequency at which the output are modulated. The prescale
-		value is determined by Eq 1 (below).
+		Reads the frequency at which the output are modulated. The
+		prescale value is determined by Eq 1 (below).
 		
 		Eq 1:
 									  osc_clock
@@ -1180,7 +1201,8 @@ class QwiicPCA9685(object):
 		:return:	prescale_value
 		:rtype:		Integer
 		
-		NOTE: Range: 24 Hz to 1526 Hz or (0x03 to 0xFF, Default: 0x1E = 200Hz)
+		NOTE: Range: 24 Hz to 1526 Hz or (0x03 to 0xFF, Default: 0x1E =
+		200Hz).
 		"""
 		# Reads value in PRE_SCALE register.
 		prescale = self._i2c.readByte(self.address, PRE_SCALE)
@@ -1188,13 +1210,13 @@ class QwiicPCA9685(object):
 		# Debug Message: 
 		if self.debug == 1:
 			# Print Pre-Scale Value
-			print("Prescale value = %d" % prescale)
+			print("Prescale value = %s" % prescale)
 			
 			# Calculate frequency based off internal clock frequency (default)
 			est_frequency = float((25*10**6)/((prescale + 1)*4096))
 			
 			# Print Equivalent Frequency
-			print("Est. frequency = %d Hz (*Based on internal clock value)" % int(est_frequency))
+			print("Est. frequency = %s Hz (*Based on internal clock value)" % int(est_frequency))
 
 		return prescale
 
@@ -1203,10 +1225,10 @@ class QwiicPCA9685(object):
 	# Configure PWM Frequency
 	def set_pre_scale(self, frequency = None, ext = None):
 		"""
-		Configures the 'prescale_value', which defines the frequency at which
-		the output are modulated. The prescale value is determined by Eq 1
-		(below). Additionally, the hardware enforces a minimum value that
-		can be loaded into this register is '3'.
+		Configures the 'prescale_value', which defines the frequency at
+		which the output are modulated. The prescale value is determined
+		by Eq 1 (below). Additionally, the hardware enforces a minimum
+		value that can be loaded into this register is '3'.
 		
 		Eq 1:
 									  osc_clock
@@ -1216,15 +1238,17 @@ class QwiicPCA9685(object):
 		:param frequency:	PWM Frequency (Hz)
 							Range: 24 to 1526 Hz
 		:param ext:			External Clock Frequency (Hz)
-							Default = None; uses internal clock frequency (25 MHz)
+							Default = None; uses internal clock
+							frequency (25 MHz)
 
 		:return:	Function Operation
 					True-	Successful
 					False-	Issue in Execution
 		:rtype:		Bool
 
-		PWM Frequency Range: 24 Hz to 1526 Hz or (0x03 to 0xFF, Default: 0x1E = 200Hz)
-		Internal Clock: 25 MHz (Default)
+		PWM Frequency Range:	24 Hz to 1526 Hz or (0x03 to 0xFF,
+		Default: 0x1E = 200Hz)
+		Internal Clock:			25 MHz (Default)
 		"""
 		# Read MODE1 register
 		mode1 = self._i2c.readByte(self.address, MODE1)
@@ -1297,20 +1321,20 @@ class QwiicPCA9685(object):
 		
 		1.	Power cycle.
 		2.	I2C Software Reset command.
-		3.	If the MODE2 OCH bit is logic 0, write to any PWM register then
-			issue an I2C-bus STOP.
-		4.	If the MODE2 OCH bit is logic 1, write to all four PWM registers
-			in any PWM channel.
+		3.	If the MODE2 OCH bit is logic 0, write to any PWM register
+			then issue an I2C-bus STOP.
+		4.	If the MODE2 OCH bit is logic 1, write to all four PWM
+			registers in any PWM channel.
 		
-		Likewise, if the user does an orderly shutdown [1] of all the PWM
-		channels before	setting the SLEEP bit, the RESTART bit will be
-		cleared. If this is done the contents of all PWM registers are
-		invalidated and must be reloaded before reuse.
+		Likewise, if the user does an orderly shutdown [1] of all the
+		PWM channels before	setting the SLEEP bit, the RESTART bit will
+		be cleared. If this is done the contents of all PWM registers
+		are invalidated and must be reloaded before reuse.
 
-		[1] Two methods can be used to do an orderly shutdown. The fastest is
-		to write a logic 1 to bit 4 in register ALL_LED_OFF_H. The other
-		method is to write logic 1 to bit 4 in each active PWM channel
-		LEDn_OFF_H register.
+		[1] Two methods can be used to do an orderly shutdown. The
+		fastest is to write a logic 1 to bit 4 in register
+		ALL_LED_OFF_H. The other method is to write logic 1 to bit 4 in
+		each active PWM channel LEDn_OFF_H register.
 		"""
 
 		# Checks if RESTART bit is a logic 1
@@ -1335,22 +1359,22 @@ class QwiicPCA9685(object):
 					1- Restart Enabled
 		:rtype:		Integer
 
-		NOTE: Only if the PCA9685 was operating and the user put the chip to
-		sleep (setting MODE1 bit 4) without stopping any of the PWM channels,
-		the RESTART bit (MODE1 bit 7) will be set to logic 1 at the end of
-		the PWM refresh cycle. The contents of each PWM register are held
-		valid when the clock is off.
+		NOTE: Only if the PCA9685 was operating and the user put the
+		chip to sleep (setting MODE1 bit 4) without stopping any of the
+		PWM channels, the RESTART bit (MODE1 bit 7) will be set to logic
+		1 at the end of the PWM refresh cycle. The contents of each PWM
+		register are held valid when the clock is off.
 				
 		Uses the following steps:
 		
 		1.	Read MODE1 register.
-		2.	Check that bit 7 (RESTART) is a logic 1. If it is, clear bit 4
-			(SLEEP). Allow time	for oscillator to stabilize (500us).
+		2.	Check that bit 7 (RESTART) is a logic 1. If it is, clear bit
+			4 (SLEEP). Allow time for oscillator to stabilize (500us).
 		3.	Write logic 1 to bit 7 of MODE1 register. All PWM channels will
 			restart and the	RESTART bit will clear.
 		
-		Remark: The SLEEP bit must be logic 0 for at least 500us, before a
-		logic 1 is written into the RESTART bit.
+		Remark: The SLEEP bit must be logic 0 for at least 500us, before
+		a logic 1 is written into the RESTART bit.
 		"""
 		
 		# Checks if RESTART bit is a logic 1
@@ -1374,17 +1398,17 @@ class QwiicPCA9685(object):
 	# Enables EXTCLCK Pin
 	def enable_extclock_bit(self):
 		"""
-		Changes value of EXTCLK bit in MODE 1 register to enable EXTCLK pin.
-		Once enabled, it allows for an external clock signal. It also
-		affects the	refresh rate:
+		Changes value of EXTCLK bit in MODE 1 register to enable EXTCLK
+		pin. Once enabled, it allows for an external clock signal. It
+		also affects the	refresh rate:
 
 									   EXTCLK
 				refresh_rate = ----------------------
 								4096 x (prescale +1)
 
 		NOTE: This EXTCLK bit is a "sticky bit", that is, it cannot be
-		cleared by writing a logic 0 to it. The EXTCLK can only be cleared
-		by a power cycle or software reset.
+		cleared by writing a logic 0 to it. The EXTCLK can only be
+		cleared by a power cycle or software reset.
 		"""
 
 		# Read MODE1 register
@@ -1400,4 +1424,4 @@ class QwiicPCA9685(object):
 		# external clock can be active during the switch because the
 		# SLEEP bit is set.
 		extclk = mode1 | (1 << sleep_bit) | (1 << extclk_bit)	# Sets SLEEP and EXTCLK bits to 1
-		self._i2c.writeByte(self.address, MODE1, extclk)	# Sets SLEEP and EXTCLK bits to 1
+		self._i2c.writeByte(self.address, MODE1, extclk)		# Sets SLEEP and EXTCLK bits to 1
