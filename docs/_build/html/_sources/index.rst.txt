@@ -24,10 +24,7 @@ Table of Contents
 .. toctree:: 
    :caption: Examples
 
-   exbitmap
-   excube
-   exdemo
-   exhello
+   ex1
 
 .. toctree::
    :caption: Other Links
