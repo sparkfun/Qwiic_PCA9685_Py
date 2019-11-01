@@ -1069,6 +1069,7 @@ class QwiicPCA9685(object):
 						0-	OFF Start timing (end of ON timing)
 						1-	ON Start timing (anything greater than 0 is
 							considered a delay)
+
 		:param value:	Value to be entered into the ON/OFF 12-bit
 						register for the specified LED output.
 						Word (2 bytes)
