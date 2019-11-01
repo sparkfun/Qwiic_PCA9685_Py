@@ -175,7 +175,7 @@ class PiServoHat(object):
 
 	#----------------------------------------------
 	# Restart PCA9685
-	def restart():
+	def restart(self):
 		"""
 		Soft resets the chip and then clears the MODE1 register to
 		restart the PWM functionality. The PWM frequency is returned to
@@ -406,8 +406,8 @@ class PiServoHat(object):
 				print(self.available_pwm_channels)
 				print("Selected Channel: %s" % channel)
 
-		initial_on = self.PCA9685.get_channel_word(channel, 0)
-		initial_off = self.PCA9685.get_channel_word(channel, 1)
+		initial_on = self.PCA9685.get_channel_word(channel, 1)
+		initial_off = self.PCA9685.get_channel_word(channel, 0)
 
 		# Debug message
 		if self.debug == 1:
@@ -440,7 +440,7 @@ class PiServoHat(object):
 		
 		# Servo Timing
 		m = 1 / swing											# ms/degree
-		difference = (initial_on - initial_off) * resolution	# steps/second
+		difference = (initial_off - initial_on) * resolution	# steps/second
 		position = ((difference * 1000) - 1) / m				# degrees
 
 		# Debug message

@@ -1014,9 +1014,9 @@ class QwiicPCA9685(object):
 		:param channel:	PWM channel.
 						0 to 16
 		:param on_off:	On or Off setting.
-						0-	ON Start timing (anything greater than 0 is
+						0-	OFF Start timing (end of ON timing)
+						1-	ON Start timing (anything greater than 0 is
 							considered a delay)
-						1-	OFF Start timing (end of ON timing)
 
 		:return: Word (2 bytes)
 
@@ -1043,10 +1043,10 @@ class QwiicPCA9685(object):
 
 		if on_off == None:
 			return False
-		elif on_off == 1:
-			register = channel_ON_L
 		elif on_off == 0:
 			register = channel_OFF_L
+		elif on_off == 1:
+			register = channel_ON_L
 
 		value = self._i2c.readWord(self.address, register)
 
@@ -1066,9 +1066,9 @@ class QwiicPCA9685(object):
 		:param channel:	PWM channel.
 						0 to 16
 		:param on_off:	ON/OFF setting.
-						0-	ON Start timing (anything greater than 0 is
+						0-	OFF Start timing (end of ON timing)
+						1-	ON Start timing (anything greater than 0 is
 							considered a delay)
-						1-	OFF Start timing (end of ON timing)
 		:param value:	Value to be entered into the ON/OFF 12-bit
 						register for the specified LED output.
 						Word (2 bytes)
@@ -1108,10 +1108,10 @@ class QwiicPCA9685(object):
 
 		if on_off == None:
 			return False
-		elif on_off == 1:
-			register = channel_ON_L
 		elif on_off == 0:
 			register = channel_OFF_L
+		elif on_off == 1:
+			register = channel_ON_L
 
 		self._i2c.writeWord(self.address, register, value)
 		return True
