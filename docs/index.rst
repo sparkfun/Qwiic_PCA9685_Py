@@ -31,5 +31,5 @@ Table of Contents
 
 	SparkFun <https://sparkfun.com>
    SparkFun Servo pHAT for Raspberry Pi <https://www.sparkfun.com/products/15316>
-	GitHub <https://github.com/sparkfun/PiServoHat_Py>
+	GitHub <https://github.com/sparkfun/Qwiic_PCA9685_Py>
 	SparkFun qwiic <https://www.sparkfun.com/qwiic>
