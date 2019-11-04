@@ -44,8 +44,7 @@ The qwiic PCA9685 Python package current supports the following platforms:
 
 Dependencies 
 ---------------
-This driver package depends on the qwiic I2C driver: 
-[Qwiic_I2C_Py](https://github.com/sparkfun/Qwiic_I2C_Py)
+This package depends on the qwiic I2C driver: [Qwiic_I2C_Py](https://github.com/sparkfun/Qwiic_I2C_Py)
 
 Documentation
 -------------
@@ -97,7 +96,7 @@ import sys
 
 def runExample():
 
-	print("\nSparkFun BME280 Sensor  Example 1\n")
+	print("\nSparkFun PCA9685 Example 1\n")
 	mySensor = qwiic_pca9685.QwiicPCA9685()
 
 	if mySensor.isConnected() == False:
