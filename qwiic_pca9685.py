@@ -346,8 +346,8 @@ class QwiicPCA9685(object):
 				byte = 0x12 (HEX), 12h, or 16 (DEC)
 				Binary:	0001 0010
 				index:	7654 3210
-						|		|
-					   MSB	   LSB
+				        |       |
+				       MSB	   LSB
 			
 				bit_number = 4
 				returns: 1
@@ -387,8 +387,8 @@ class QwiicPCA9685(object):
 				byte =	0x12 (HEX), 12h, or 16
 				Binary:	0001 0010
 				index:	7654 3210
-						|		|
-					   MSB	   LSB
+				        |       |
+				       MSB	   LSB
 				
 				Change:
 				bit_number =	4
@@ -635,9 +635,9 @@ class QwiicPCA9685(object):
 		allows for an external clock signal. It also affects the refresh
 		rate:
 
-									   EXTCLK
+				                       EXTCLK
 				refresh_rate = ----------------------
-								4096 x (prescale +1)
+				                4096 x (prescale +1)
 
 		:return:	Value of EXTCLK bit.
 					0-	Use Internal Clock (Default)
@@ -1159,13 +1159,13 @@ class QwiicPCA9685(object):
 		formatted I2C bus command.
 
 		 General Call Address
-				|	 SWRST data byte 1
-		Start	|			 |		Stop
-		 |		|			 |		 |
+		        |    SWRST data byte 1
+		Start   |            |      Stop
+		 |      |            |       |
 		[S][0000 0000][A][0000 0110][A][P]
-					   |			 |
-			  Acknowldege from Slave |
-							Acknowldege from Slave
+		               |             |
+		      Acknowldege from Slave |
+		                    Acknowldege from Slave
 		
 		PCA9685 then resets to the default value (power-up value) and is
 		ready to be addressed again within the specified bus free time.
@@ -1195,9 +1195,9 @@ class QwiicPCA9685(object):
 		prescale value is determined by Eq 1 (below).
 		
 		Eq 1:
-									  osc_clock
+		                              osc_clock
 		prescale value = round(----------------------) - 1
-								(4096 * update_rate)
+		                        (4096 * update_rate)
 				
 		:return:	prescale_value
 		:rtype:		Integer
@@ -1232,9 +1232,9 @@ class QwiicPCA9685(object):
 		value that can be loaded into this register is '3'.
 		
 		Eq 1:
-									  osc_clock
+		                              osc_clock
 		prescale value = round(----------------------) - 1
-								(4096 * update_rate)
+		                        (4096 * update_rate)
 				
 		:param frequency:	PWM Frequency (Hz)
 							Range: 24 to 1526 Hz
@@ -1403,9 +1403,9 @@ class QwiicPCA9685(object):
 		pin. Once enabled, it allows for an external clock signal. It
 		also affects the	refresh rate:
 
-									   EXTCLK
+				                       EXTCLK
 				refresh_rate = ----------------------
-								4096 x (prescale +1)
+				                4096 x (prescale +1)
 
 		NOTE: This EXTCLK bit is a "sticky bit", that is, it cannot be
 		cleared by writing a logic 0 to it. The EXTCLK can only be
