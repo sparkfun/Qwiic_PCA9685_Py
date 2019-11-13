@@ -1,0 +1,7 @@
+qwiic_pca9685.py
+setup.py
+sparkfun_qwiic_pca9685.egg-info/PKG-INFO
+sparkfun_qwiic_pca9685.egg-info/SOURCES.txt
+sparkfun_qwiic_pca9685.egg-info/dependency_links.txt
+sparkfun_qwiic_pca9685.egg-info/requires.txt
+sparkfun_qwiic_pca9685.egg-info/top_level.txt
