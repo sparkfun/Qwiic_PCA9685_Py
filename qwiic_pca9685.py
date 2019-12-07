@@ -504,7 +504,7 @@ class QwiicPCA9685(object):
 		else:							# Use input 'addr_bit'
 			set_addr_bit = addr_bit
 
-		if value != 0 or value != 1:	# Checks for valid input
+		if value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input.")
@@ -558,7 +558,7 @@ class QwiicPCA9685(object):
 
 		if value == None:				# If no input value, sets to default value
 			set_value = 1				# Default
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input. Setting to default value (1 = Low Power Mode; Oscillator Off).")
@@ -614,7 +614,7 @@ class QwiicPCA9685(object):
 
 		if value == None:				# If no input value, sets to default value
 			set_value = 0				# Default
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input. Setting to default value (0- Auto-Increment Disabled).")
@@ -711,7 +711,7 @@ class QwiicPCA9685(object):
 			if self.debug == 1:
 				print("Invalid value input.")
 			# value = 0 # Default
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input.")
@@ -855,7 +855,7 @@ class QwiicPCA9685(object):
 			if self.debug == 1:
 				print("Invalid value input. Set bit value.")
 			return False
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input. Value outside bounds.")
@@ -931,7 +931,7 @@ class QwiicPCA9685(object):
 			if self.debug == 1:
 				print("Invalid value input. Set bit value.")
 			return False
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input. Value outside bounds.")
@@ -992,7 +992,7 @@ class QwiicPCA9685(object):
 			if self.debug == 1:
 				print("Invalid value input. Set bit value.")
 			return False
-		elif value != 0 or value != 1:	# Checks for valid input
+		elif value != 0 and value != 1:	# Checks for valid input
 			# Debug Message: 
 			if self.debug == 1:
 				print("Invalid value input. Value outside bounds.")
