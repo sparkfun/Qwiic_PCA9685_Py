@@ -97,7 +97,7 @@ leaving a maximum of 62 addresses.
 
 	NOTE: I'm not sure how NXP got to 62 as the Software Reset address
 	doesn't fall in the available options. Additionally, it is a command
-	bit sent after the the General Call Address. (Let me know if you
+	bit sent after the General Call Address. (Let me know if you
 	figure this out, so I can comment this library properly.)
 """
 _AVAILABLE_I2C_ADDRESS = list(range(0x40,0x7F+1))		# Full Address List
@@ -105,7 +105,7 @@ _AVAILABLE_I2C_ADDRESS = list(range(0x40,0x7F+1))		# Full Address List
 # Special Use Addresses:
 _gcAddr =		0x00 	# General Call address for software reset
 _acAddr =		0x70	# All Call address- used for modifications to
-						# multiple PCA9685 chips reguardless of thier
+						# multiple PCA9685 chips regardless of their
 						# I2C address set by hardware pins (A0 to A5).
 _subAddr_1 =	0x71	# 1110 001X or 0xE2 (7-bit)
 _subAddr_2 =	0x72	# 1110 010X or 0xE4 (7-bit)
@@ -287,7 +287,7 @@ class QwiicPCA9685(object):
 	def __init__(self, address = None, debug = None, i2c_driver = None):
 		"""
 		This method initializes the class object. If no 'address' or
-		'i2c_driver' are inputed or 'None' is specified, the method will
+		'i2c_driver' are inputted or 'None' is specified, the method will
 		use the defaults.
 
 		:param address: 	The I2C address to use for the device.
@@ -330,7 +330,7 @@ class QwiicPCA9685(object):
 #=======================================================================
 
 	#----------------------------------------------
-	# Reads value of specific bit in byte
+	# Reads the value of a specific bit in the byte
 	def __readBit__(self, byte, bit_number):
 		"""
 		This method returns the value of a specific bit in a byte.
@@ -357,20 +357,20 @@ class QwiicPCA9685(object):
 			# Debug Message: 
 			if self.debug == 1:
 				print("Bit number is outside the bounds of the byte length.")
-			# Returns 0 because bit location is outside the length of
+			# Returns 0 because the bit location is outside the length of
 			# the byte (i.e. leading zeros)
 			return 0
 		else:
 			mask = 1 << bit_number
 
-		# Returns value of bit
+		# Returns the value of the bit
 		return (byte & mask) >> bit_number
 
 	#----------------------------------------------
-	# Writes value to specific bit in byte
+	# Writes a value to a specific bit in the byte
 	def __writeBit__(self, byte, bit_number, value):
 		"""
-		This method modifies a byte at specific bit, with a specified
+		This method modifies a specific bit in a byte, with a specified
 		value.
 
 		:param byte:		Integer or Hex value.
@@ -409,13 +409,13 @@ class QwiicPCA9685(object):
 				print("Bit number: %s" % bit_number)
 				print("Byte length: %s" % len(bin(byte)))
 
-			# A mask with length of bit_number with all bits of "value"
+			# A mask with a length of bit_number, with all bits of "value"
 			bit_mask = (1 - value) * (2**bit_number -1)
 		else:
-			# A mask with length of byte of all "value"
+			# A mask with a length of byte, of all "value"
 			bit_mask = (1 - value) * (2**len(bin(byte)) -1)
 
-		# Writes value in byte at bit_number
+		# Writes a value to the bit_number, in a byte
 		byte ^= (~bit_mask ^ byte) & mask
 
 		# Returns modified byte
@@ -441,7 +441,7 @@ class QwiicPCA9685(object):
 	# Checks Value of Address Bits
 	def get_addr_bit(self, addr_bit = None):
 		"""
-		Reads value of specified address bit in MODE 1 register.
+		Reads the value of a specified address bit in MODE 1 register.
 
 		:param addr_bit:	Specify address bit.
 							0-	ALLCALL Bit (Default)
@@ -478,7 +478,7 @@ class QwiicPCA9685(object):
 	# Writes Value to Address Bits
 	def set_addr_bit(self, addr_bit, value):
 		"""
-		Writes value to specified address bit in MODE 1 register.
+		Writes the value to a specified address bit in MODE 1 register.
 
 		:param addr_bit:	Specify address bit.
 							0-	ALLCALL Bit
@@ -521,7 +521,7 @@ class QwiicPCA9685(object):
 	# Checks Value of SLEEP Bit
 	def get_sleep_bit(self):
 		"""
-		Reads value of SLEEP bit in MODE 1 register. When enabled, it
+		Reads the value of SLEEP bit in MODE 1 register. When enabled, it
 		the chip there is no PWM control.
 
 		:return:	Value of SLEEP bit.
@@ -544,7 +544,7 @@ class QwiicPCA9685(object):
 	# Writes Value to SLEEP Bit
 	def set_sleep_bit(self, value = None):
 		"""
-		Changes value of SLEEP bit in MODE 1 register.
+		Changes the value of SLEEP bit in MODE 1 register.
 
 		:param value:	Value to set SLEEP bit.
 						0-	Normal Mode
@@ -575,7 +575,7 @@ class QwiicPCA9685(object):
 	# Checks Value of AI Bit
 	def get_auto_increment_bit(self):
 		"""
-		Reads value of AI bit in MODE 1 register. When enabled, it
+		Reads the value of AI bit in MODE 1 register. When enabled, it
 		allows users to write of multiple bytes (i.e. words).
 
 		:return:	Value of AI bit.
@@ -631,7 +631,7 @@ class QwiicPCA9685(object):
 	# Checks Value of EXTCLK Bit
 	def get_extclock_bit(self):
 		"""
-		Reads value of EXTCLK bit in MODE 1 register. When enabled, it
+		Reads the value of EXTCLK bit in MODE 1 register. When enabled, it
 		allows for an external clock signal. It also affects the refresh
 		rate:
 
@@ -664,7 +664,7 @@ class QwiicPCA9685(object):
 	# Checks Value of RESTART Bit
 	def get_restart_bit(self):
 		"""
-		Reads value of RESTART bit in MODE 1 register.
+		Reads the value of RESTART bit in MODE 1 register.
 
 		:return:	Value of Restart Mode bit.
 					0-	Restart Disabled (Default)
@@ -728,7 +728,7 @@ class QwiicPCA9685(object):
 	# Checks Value of OUTNE Bits
 	def get_outne_bits(self):
 		"""
-		Reads value of OUTNE bits in MODE 2 register. When the active
+		Reads the value of OUTNE bits in MODE 2 register. When the active
 		LOW output (OE pin) is enabled, this setting allows users to
 		enable or disable all the LED outputs at the same time.
 
@@ -759,7 +759,7 @@ class QwiicPCA9685(object):
 	# Writes Value to OUTNE Bits
 	def set_outne_bit(self, value = None):
 		"""
-		Reads value of OUTNE bits in MODE 2 register. When the active
+		Reads the value of OUTNE bits in MODE 2 register. When the active
 		LOW output (OE pin) is enabled, this setting allows users to
 		enable or disable all the LED outputs at the same time.
 
@@ -810,7 +810,7 @@ class QwiicPCA9685(object):
 	# Checks Value of OUTDRV Bit
 	def get_outdrv_bit(self):
 		"""
-		Reads value of OUTDRV bit in MODE 2 register. Determines how the
+		Reads the value of OUTDRV bit in MODE 2 register. Determines how the
 		outputs are driven.
 
 		:return:	Value of OUTDRV bits.
@@ -872,7 +872,7 @@ class QwiicPCA9685(object):
 	# Checks Value of OCH Bit
 	def get_och_bit(self):
 		"""
-		Reads value of OCH bit in MODE 2 register. Determines when the
+		Reads the value of OCH bit in MODE 2 register. Determines when the
 		outputs change.
 
 		:return:	Value of OCH bits.
@@ -904,7 +904,7 @@ class QwiicPCA9685(object):
 	# Writes Value to OCH Bits
 	def set_och_bit(self, value = None):
 		"""
-		Reads value of OCH bits in MODE 2 register. Configures when the
+		Reads the value of OCH bits in MODE 2 register. Configures when the
 		outputs change.
 
 		:param value:	Value of OCH bits.
@@ -948,7 +948,7 @@ class QwiicPCA9685(object):
 	# Checks Value of INVRT Bit
 	def get_invrt_bit(self):
 		"""
-		Reads value of INVRT bit in MODE 2 register. Determines how the
+		Reads the value of INVRT bit in MODE 2 register. Determines how the
 		outputs are driven. See Section 7.7 “Using the PCA9685 with and
 		without external drivers” of the datasheet.
 
@@ -1154,7 +1154,7 @@ class QwiicPCA9685(object):
 	# Software Reset Call
 	def soft_reset(self):
 		"""
-		Software Resset Call: Allows all the devices in the I2C bus to
+		Software Reset Call: Allows all the devices in the I2C bus to
 		be reset to the power-up state value through a specific
 		formatted I2C bus command.
 
@@ -1164,13 +1164,13 @@ class QwiicPCA9685(object):
 		 |      |            |       |
 		[S][0000 0000][A][0000 0110][A][P]
 		               |             |
-		      Acknowldege from Slave |
-		                    Acknowldege from Slave
+		      Acknowledge from Slave |
+		                    Acknowledge from Slave
 		
 		PCA9685 then resets to the default value (power-up value) and is
 		ready to be addressed again within the specified bus free time.
-		A falure or non-acknowledge from the PCA9685 (at any time)
-		should be interpreted as a "SWRST Call Abort".
+		A failure or non-acknowledge from the PCA9685 (at any time)
+		should be interpreted as an "SWRST Call Abort".
 		"""
 		
 		self._i2c.writeCommand(_gcAddr, _SWRST)
@@ -1260,7 +1260,7 @@ class QwiicPCA9685(object):
 			pwmPreScale = 0x1E # Default
 
 		elif frequency < 24 or 1526 < frequency: # Checks for valid input
-			print("Invalid frequency input. Setting to default value (200 Hz)")
+			print("Invalid frequency input. Setting to the default value (200 Hz)")
 			return False
 		
 		else:
@@ -1274,7 +1274,7 @@ class QwiicPCA9685(object):
 					osc_clock = ext
 			# Uses internal clock frequency if set to None
 			else:
-				# Check if internal or external clock is used
+				# Check if the internal or external clock is used
 				# EXTCLK bit:
 				# 	0 = Internal Clock (Default)
 				# 	1 = External Clock Pin
@@ -1300,7 +1300,7 @@ class QwiicPCA9685(object):
 		# Writes prescale value to PRE_SCALE register.
 		self._i2c.writeByte(self.address, PRE_SCALE, pwmPreScale)	
 		
-		# Resets MODE1 register to original value.
+		# Resets MODE1 register to the original value.
 		self._i2c.writeByte(self.address, MODE1, mode1)
 
 		return True
@@ -1370,7 +1370,7 @@ class QwiicPCA9685(object):
 		
 		1.	Read MODE1 register.
 		2.	Check that bit 7 (RESTART) is a logic 1. If it is, clear bit
-			4 (SLEEP). Allow time for oscillator to stabilize (500us).
+			4 (SLEEP). Allow time for the oscillator to stabilize (500us).
 		3.	Write logic 1 to bit 7 of MODE1 register. All PWM channels will
 			restart and the	RESTART bit will clear.
 		
@@ -1383,7 +1383,7 @@ class QwiicPCA9685(object):
 			# Clear SLEEP bit
 			self.set_sleep_bit(0)
 				
-			# Allow time for oscillator to stabilize (1ms)
+			# Allow time for the oscillator to stabilize (1ms)
 			time.sleep( 10**(-3))
 
 			# Writes logic 1 to RESTART bit
@@ -1418,7 +1418,7 @@ class QwiicPCA9685(object):
 		sleep_bit = 4	# Fifth bit in register
 		extclk_bit = 6	# Seventh bit in register
 
-		# Set SLEEP bit in MODE1. Turns off internal oscillator.
+		# Set SLEEP bit in MODE1. Turns off the internal oscillator.
 		self.set_sleep_bit(1)	# Sets SLEEP bit to 1 = Low Power Mode; Oscillator Off.
 
 		# Write logic 1's to both SLEEP and EXTCLK bits in MODE1. The

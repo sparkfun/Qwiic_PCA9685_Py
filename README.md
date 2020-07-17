@@ -67,7 +67,7 @@ pip install sparkfun-qwiic-pca9685
 ```
 
 ### Local Installation
-To install, make sure the setuptools package is installed on the system.
+To install, make sure the `setuptools` package is installed on the system.
 
 Direct installation at the command line:
 ```sh
