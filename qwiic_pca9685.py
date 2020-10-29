@@ -1292,7 +1292,7 @@ class QwiicPCA9685(object):
 
 		
 		# Calculate prescale value
-		pwmPreScale = round(float(osc_clock/(4096*frequency))) - 1
+		pwmPreScale = int(round(float(osc_clock/(4096*frequency)))) - 1
 		
 		# Writes 1 to SLEEP bit in MODE1 register.
 		self.set_sleep_bit(1)
