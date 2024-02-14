@@ -49,8 +49,8 @@
 """
 qwiic_pca9685
 ===============
-Python module for the [SparkFun Pi Servo HAT](https://www.sparkfun.com/products/14328) and [SparkFun Servo pHAT for Raspberry Pi](https://www.sparkfun.com/products/15316)
-This package should be used in conjunction with the i2c_driver package contained in the [SparkFun qwiic Python Package](https://github.com/sparkfun/Qwiic_Py)
+Python module for the `SparkFun Pi Servo HAT <https://www.sparkfun.com/products/14328>` and `SparkFun Servo pHAT for Raspberry Pi <https://www.sparkfun.com/products/15316>`
+This package should be used in conjunction with the i2c_driver package contained in the `SparkFun qwiic Python Package <https://github.com/sparkfun/Qwiic_Py>`
 """
 
 # Load Necessary Modules:
