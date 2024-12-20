@@ -337,7 +337,7 @@ class QwiicPCA9685(object):
 
 		:param byte:		Integer or Hex value.
 		:param bit_number:	The index number of the bit you are
-							interested in, starting from LSB = 0.
+							interested in, starting from LSB = 0 to MSB = 7.
 
 		:return: Value of bit at bit_number location. (0 or 1)
 		:rtype: Integer
@@ -352,18 +352,14 @@ class QwiicPCA9685(object):
 				bit_number = 4
 				returns: 1
 		"""
-
-		if len(bin(byte)) < bit_number:
+		if (bit_number < 0) or (bit_number > 7):
 			# Debug Message: 
 			if self.debug == 1:
-				print("Bit number is outside the bounds of the byte length.")
-			# Returns 0 because the bit location is outside the length of
-			# the byte (i.e. leading zeros)
+				print("Bit number is outside the bounds of a byte")
 			return 0
-		else:
-			mask = 1 << bit_number
 
 		# Returns the value of the bit
+		mask = 1 << bit_number
 		return (byte & mask) >> bit_number
 
 	#----------------------------------------------
@@ -398,28 +394,20 @@ class QwiicPCA9685(object):
 				returns:		2
 				Binary:	0000 0010
 		"""
-
-		# A mask for the specified bit to change.
-		mask = 1 << bit_number
-
-		if len(bin(byte)) < bit_number:
+		if value not in [0, 1]:
 			# Debug Message: 
 			if self.debug == 1:
-				print("Bit number is outside the bounds of the byte length.")
-				print("Bit number: %s" % bit_number)
-				print("Byte length: %s" % len(bin(byte)))
-
-			# A mask with a length of bit_number, with all bits of "value"
-			bit_mask = (1 - value) * (2**bit_number -1)
-		else:
-			# A mask with a length of byte, of all "value"
-			bit_mask = (1 - value) * (2**len(bin(byte)) -1)
-
-		# Writes a value to the bit_number, in a byte
-		byte ^= (~bit_mask ^ byte) & mask
-
+				print("Invalid value input. Value must be 0 or 1.")
+			return byte
+		
+		if bit_number < 0 or bit_number > 7:
+			# Debug Message: 
+			if self.debug == 1:
+				print("Bit number is outside the bounds of a byte.")
+			return byte
+			
 		# Returns modified byte
-		return byte
+		return (byte & ~(1 << bit_number)) | (value << bit_number)
 
 	#----------------------------------------------
 	# Checks I2C connection
